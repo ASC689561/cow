@@ -3,6 +3,10 @@ import os
 
 
 class ConfigBase:
+
+    def __init__(self):
+        pass
+
     def merge_dic(self, dic):
         for k, v in dic.items():
             setattr(self, k, v)
