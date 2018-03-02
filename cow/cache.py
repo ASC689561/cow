@@ -6,3 +6,4 @@ def create_disk_cache(path='/tmp/cache/'):
     global disk_cache
 
     disk_cache = Cache(path)
+    return disk_cache
