@@ -9,6 +9,7 @@ from .dict_utils import *
 from .path_util import *
 from .string_util import *
 from .try_catch_util import *
+from .cache import *
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
