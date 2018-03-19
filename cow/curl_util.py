@@ -13,5 +13,5 @@ def execute_curl(curl, json_out=True):
         else:
             return out
     except Exception as e:
-        logging.error('Error when execute curl, resull[{}]'.format(out))
+        logging.error('Error when execute curl[{}], resull[{}]'.format(curl, out))
         raise e
