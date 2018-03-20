@@ -4,13 +4,15 @@ import pickle
 
 
 def zip_obj(obj, file_name=None):
-    zip_buffer = io.BytesIO()
-    f = gzip.open(zip_buffer, 'wb')
-    pickle.dump(obj, f)
+    with io.BytesIO() as zip_buffer:
+        f = gzip.open(zip_buffer, 'wb')
+        pickle.dump(obj, f)
 
-    if not file_name:
-        with open(file_name, 'wb') as out:
-            out.write(zip_buffer.read())
+        if not file_name:
+            with open(file_name, 'wb') as out:
+                out.write(zip_buffer.read())
+        zip_buffer.seek(0)
+        return zip_buffer.read()
 
 
 def unzip_obj(file_name):
