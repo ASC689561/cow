@@ -5,12 +5,12 @@ import tempfile
 
 def zip_obj(obj, file_name=None):
     if file_name is None:
-        tem_file = tempfile.mktemp()
+        file_name = tempfile.mktemp()
 
-    with gzip.open(tem_file, 'wb') as f:
+    with gzip.open(file_name, 'wb') as f:
         pickle.dump(obj, f)
 
-    with gzip.open(tem_file, 'rb') as f:
+    with gzip.open(file_name, 'rb') as f:
         data = f.read()
         return data
 
