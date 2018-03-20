@@ -1,9 +1,6 @@
 import gzip
-import io
 import pickle
 import tempfile
-
-import os
 
 
 def zip_obj(obj, file_name=None):
