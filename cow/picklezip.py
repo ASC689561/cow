@@ -1,18 +1,21 @@
 import gzip
 import io
 import pickle
+import tempfile
+
+import os
 
 
 def zip_obj(obj, file_name=None):
-    with io.BytesIO() as zip_buffer:
-        f = gzip.open(zip_buffer, 'wb')
+    if file_name is None:
+        tem_file = tempfile.mktemp()
+
+    with gzip.open(tem_file, 'wb') as f:
         pickle.dump(obj, f)
 
-        if file_name:
-            with open(file_name, 'wb') as out:
-                out.write(zip_buffer.read())
-        zip_buffer.seek(0)
-        return zip_buffer.read()
+    with gzip.open(tem_file, 'rb') as f:
+        data = f.read()
+        return data
 
 
 def unzip_obj(file_name):
