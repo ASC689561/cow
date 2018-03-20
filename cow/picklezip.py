@@ -8,7 +8,7 @@ def zip_obj(obj, file_name=None):
         f = gzip.open(zip_buffer, 'wb')
         pickle.dump(obj, f)
 
-        if not file_name:
+        if file_name:
             with open(file_name, 'wb') as out:
                 out.write(zip_buffer.read())
         zip_buffer.seek(0)
