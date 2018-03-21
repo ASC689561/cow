@@ -18,3 +18,12 @@ def zip_spare_array(arr):
             arr[v] = arr[v][0]
 
     return arr
+
+
+def unzip_spare_array(arr):
+    for v in reversed(range(0, len(arr))):
+        if isinstance(arr[v], list) or isinstance(arr[v], tuple):
+            temp_arr = [arr[v][0]] * arr[v][1]
+            arr.pop(v)
+            arr[v:v] = temp_arr
+    return arr
