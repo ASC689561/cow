@@ -30,7 +30,10 @@ class ConfigBase:
                 logging.warning("Config chagned, Auto terminated app.")
                 os.kill(os.getpid(), signal.SIGTERM)
             dic = json.loads(data.decode("utf-8"))
-            self.merge_dic(dic)
+
+            for k, v in dic.items():
+                setattr(self, k, v)
+
             sleepEvent.set()
 
         def heartbeat():
