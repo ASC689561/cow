@@ -23,7 +23,7 @@ class ConfigBase:
 
         @zk.DataWatch(config_path)
         def watch_node(data, stat):
-            logging.warning("Config chagned")
+            logging.warning("Config chagned:"+str(data.decode("utf-8")))
 
             import json
             if sleepEvent.is_set() and auto_terminated:
