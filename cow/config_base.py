@@ -1,5 +1,7 @@
 import logging
 import os
+import signal
+import threading
 
 
 class ConfigBase:
@@ -10,6 +12,40 @@ class ConfigBase:
     def merge_dic(self, dic):
         for k, v in dic.items():
             setattr(self, k, v)
+
+    def merge_zk(self, zk_server, config_path, monitor_path=None, auto_terminated=True):
+        from kazoo.client import KazooClient
+        sleepEvent = threading.Event()
+
+        zk = KazooClient(hosts=zk_server)
+        zk.start()
+
+        @zk.DataWatch(config_path)
+        def watch_node(data, stat):
+            logging.warning("Config chagned")
+
+            import json
+            if sleepEvent.is_set() and auto_terminated:
+                logging.warning("Config chagned, Auto terminated app.")
+                os.kill(os.getpid(), signal.SIGTERM)
+            dic = json.loads(data.decode("utf-8"))
+            self.merge_dic(dic)
+            sleepEvent.set()
+
+        def heartbeat():
+            zk.create(monitor_path, b'', ephemeral=True, makepath=True)
+
+            while True:
+                import time
+                time.sleep(5)
+                import datetime
+                zk.set(monitor_path, str(datetime.datetime.now()).encode())
+                logging.debug('heartbeat')
+
+        sleepEvent.wait()
+        if monitor_path:
+            t = threading.Thread(target=heartbeat, args=())
+            t.start()
 
     def merge_env(self, *list_property_name):
         self_attr_dic = list(self._get_all_attr())
