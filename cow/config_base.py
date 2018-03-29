@@ -2,6 +2,7 @@ import logging
 import os
 import signal
 import threading
+import traceback
 
 
 class ConfigBase:
@@ -33,14 +34,17 @@ class ConfigBase:
             sleepEvent.set()
 
         def heartbeat():
-            zk.create(monitor_path, b'', ephemeral=True, makepath=True)
+            try:
+                zk.create(monitor_path, b'', ephemeral=True, makepath=True)
 
-            while True:
-                import time
-                time.sleep(5)
-                import datetime
-                zk.set(monitor_path, str(datetime.datetime.now()).encode())
-                logging.debug('heartbeat')
+                while True:
+                    import time
+                    time.sleep(5)
+                    import datetime
+                    zk.set(monitor_path, str(datetime.datetime.now()).encode())
+                    logging.debug('heartbeat')
+            except:
+                logging.error(traceback.format_exc())
 
         sleepEvent.wait()
         if monitor_path:
