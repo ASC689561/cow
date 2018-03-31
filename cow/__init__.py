@@ -14,6 +14,7 @@ from .try_catch_util import *
 from .spare_array_zip import *
 from .debug import *
 from .time_utils import get_ntp_time
+from .notification import notify_message
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
