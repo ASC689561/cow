@@ -1,9 +1,9 @@
-disk_cache = None
+__disk_cache = None
 
 
 def create_disk_cache(path='/tmp/cache/'):
     from diskcache import Cache
-    global disk_cache
+    global __disk_cache
 
-    disk_cache = Cache(path)
-    return disk_cache
+    __disk_cache = Cache(path)
+    return __disk_cache
