@@ -9,6 +9,7 @@ from .dict_utils import update, get_md5, remove_key_except
 from .function_util import timing, ignore_exception
 from .logging_util import LogBuilder
 from .notification import notify_message
+from .parameter_util import get_env_param
 from .path_util import ensure_directory_exists, get_callee_path
 from .picklezip import unzip_obj, zip_obj
 from .spare_array_zip import unzip_spare_array, zip_spare_array
