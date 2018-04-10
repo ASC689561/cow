@@ -1,14 +1,13 @@
 import datetime
-
-import ntplib
-import pytz
-
 import logging
 
 init_time = {}
 
 
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh'):
+    import ntplib
+    import pytz
+
     local_time_zone = pytz.timezone("Asia/Ho_Chi_Minh")  # time zone name from Olson database
 
     def get_time_from__ntp_client():
