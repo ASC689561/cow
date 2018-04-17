@@ -13,34 +13,6 @@ class WebServiceException:
         self.message = message
 
 
-class TokenInvalidException(RuntimeError):
-    def __init__(self, message):
-        self.code = TOKEN_INVALID
-        self.message = message
-
-    def __str__(self):
-        return "Token invalid:" + self.message
-
-
-def check_token(tk):
-    def check_token_method(method):
-        def check(*args, **kw):
-            import cherrypy
-            token = cherrypy.request.headers.get('Token', None)
-
-            if not token:
-                raise TokenInvalidException("null")
-            logging.debug('token:' + token)
-            if token.lower() != tk:
-                raise TokenInvalidException(token)
-            result = method(*args, **kw)
-            return result
-
-        return check
-
-    return check_token_method
-
-
 def auto_try_catch(method):
     def try_catch(*args, **kw):
         try:
