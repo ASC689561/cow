@@ -6,6 +6,7 @@ from .config_base import ConfigBase
 from .curl_util import execute_curl
 from .debug import is_debug, execute_from
 from .dict_utils import update, get_md5, remove_key_except
+from .flask_util import *
 from .function_util import timing, ignore_exception
 from .logging_util import LogBuilder
 from .notification import notify_message
