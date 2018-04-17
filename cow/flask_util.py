@@ -4,13 +4,33 @@ from functools import wraps
 
 SUCCESS = 200  # thành công
 UNKNOWN_EXCEPTION = 201  # lỗi unknown
-TOKEN_INVALID = 202  # sai token
+AUTHEN_FAILED = 202  # sai token
 
 
-class WebServiceException:
+class WebServiceException(RuntimeError):
     def __init__(self, code: int, message: str):
+        super(WebServiceException, self).__init__(message)
         self.code = code
         self.message = message
+
+
+class AuthenFailedException(WebServiceException):
+    def __init__(self):
+        super(AuthenFailedException, self).__init__(AUTHEN_FAILED, 'Authentication failed')
+
+
+def check_auth(check_function):
+    def check_token_method(method):
+        @wraps(method)
+        def check(*args, **kw):
+            if not check_function():
+                raise AuthenFailedException()
+            result = method(*args, **kw)
+            return result
+
+        return check
+
+    return check_token_method
 
 
 def auto_try_catch(method):
