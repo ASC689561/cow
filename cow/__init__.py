@@ -17,6 +17,7 @@ from .spare_array_zip import unzip_spare_array, zip_spare_array
 from .string_util import keymap_replace
 from .time_utils import get_ntp_time
 from .try_catch_util import catch_exception
+from .progress_util import progress
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
