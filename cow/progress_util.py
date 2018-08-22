@@ -1,12 +1,12 @@
 import sys
 
-
 import time
 import sys
 
-def progress(progress):
-    print('\r[{0}] {1}%'.format('#'*int(progress/2), progress))
-#
+
+def show_progress(progress):
+    print('\r[{0}] {1}%'.format('#' * int(progress / 2), progress))
+
 # def progress(count, total, status=''):
 #     bar_len = 60
 #     filled_len = int(round(bar_len * count / float(total)))

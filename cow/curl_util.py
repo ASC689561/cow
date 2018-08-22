@@ -6,7 +6,7 @@ class CurlNotFound(Exception):
         super(CurlNotFound, self).__init__('Curl not found in')
 
 
-def execute_curl(curl, json_out=True):
+def execute_curl(curl, json_out=True) -> dict:
     import json
     import subprocess
     out = ''

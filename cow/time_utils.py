@@ -4,7 +4,7 @@ import logging
 init_time = {}
 
 
-def get_ntp_time(time_zone='Asia/Ho_Chi_Minh'):
+def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
     import ntplib
     import pytz
 
