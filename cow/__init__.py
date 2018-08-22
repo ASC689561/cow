@@ -5,7 +5,7 @@ from .cache import create_disk_cache
 from .curl_util import execute_curl
 from .debug import is_debug
 from .dict_utils import remove_key_except, md5
-from .flask_util import *
+from .webservice_util import *
 from .function_util import timing, ignore_exception
 from .logging_util import LogBuilder
 from .notification import notify_message

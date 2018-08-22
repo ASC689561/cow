@@ -1,9 +1,3 @@
-import sys
-
-import time
-import sys
-
-
 def show_progress(progress):
     print('\r[{0}] {1}%'.format('#' * int(progress / 2), progress))
 
