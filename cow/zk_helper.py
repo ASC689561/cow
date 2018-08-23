@@ -19,7 +19,9 @@ def __zksingleton(cls):
 class ZKHelper:
     def __init__(self, zk_client):
         self.zk_client = zk_client
-        print(zk_client)
+
+    def chroot(self, base_path):
+        self.zk_client.chroot = base_path
 
     def get_json(self, path) -> dict:
         try:
