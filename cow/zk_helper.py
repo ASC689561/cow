@@ -21,6 +21,7 @@ class ZKHelper:
         self.zk_client = zk_client
 
     def chroot(self, base_path):
+        self.zk_client.ensure_path(base_path)
         self.zk_client.chroot = base_path
 
     def get_json(self, path) -> dict:
