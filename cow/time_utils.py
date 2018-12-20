@@ -1,7 +1,9 @@
 import datetime
 import logging
 
-init_time = {}
+from .cache import create_disk_cache
+
+init_time = create_disk_cache('/tmp/time_cache')
 
 
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:

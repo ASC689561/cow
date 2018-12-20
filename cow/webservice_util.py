@@ -40,12 +40,13 @@ def auto_try_catch(method):
 
         try:
             result = method(*args, **kw)
-            return jsonify({'code': SUCCESS, 'status': 'success', 'data': result, 'message': None})
+            return jsonify({'code': SUCCESS, 'status': 'success', 'data': result, 'message': None}), 200, {
+                'ContentType': 'application/json'}
         except Exception as ex:
             logging.error(traceback.format_exc())
             code = ex.__dict__.get('code', None)
             if code is not None:
-                return jsonify({'code': code, 'status': 'error', 'data': None, 'message': str(ex)})
-            return jsonify({'code': UNKNOWN_EXCEPTION, 'status': 'error', 'data': None, 'message': str(ex)})
+                return jsonify({'code': code, 'status': 'error', 'data': None, 'message': str(ex)}), code, {'ContentType': 'application/json'}
+            return jsonify({'code': UNKNOWN_EXCEPTION, 'status': 'error', 'data': None, 'message': str(ex)}), 200, {'ContentType': 'application/json'}
 
     return try_catch
