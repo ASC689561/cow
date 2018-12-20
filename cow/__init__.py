@@ -14,7 +14,6 @@ from .progress_util import show_progress
 from .string_util import keymap_replace
 from .time_utils import get_ntp_time
 from .webservice_util import *
-from .zk_helper import ZKHelper
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
