@@ -3,7 +3,12 @@ import logging
 
 from .cache import create_disk_cache
 
-init_time = create_disk_cache('/tmp/time_cache')
+init_time_ = None
+
+
+def init_time():
+    global init_time_
+    init_time_ = create_disk_cache('/tmp/time_cache')
 
 
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
