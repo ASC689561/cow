@@ -10,7 +10,6 @@ from .lazy_load import LazyProperty, LazyWrapper
 from .logging_util import LogBuilder
 from .notification import notify_message
 from .path_util import ensure_directory_exists, get_callee_path
-from .progress_util import show_progress
 from .string_util import keymap_replace
 from .time_utils import get_ntp_time
 from .webservice_util import *
