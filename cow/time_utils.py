@@ -3,17 +3,17 @@ import logging
 
 from .cache import create_disk_cache
 
-init_time_ = None
+init_time = None
 
 
-def init_time():
-    global init_time_
-    init_time_ = create_disk_cache('/tmp/time_cache')
+def init_current_time():
+    global init_time
+    init_time = create_disk_cache('/tmp/time_cache')
 
 
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
-    if init_time_ is None:
-        init_time()
+    if init_time is None:
+        init_current_time()
     import ntplib
     import pytz
 
