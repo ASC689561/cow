@@ -12,6 +12,8 @@ def init_time():
 
 
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
+    if init_time_ is None:
+        init_time()
     import ntplib
     import pytz
 
