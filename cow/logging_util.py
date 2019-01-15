@@ -1,28 +1,6 @@
 import logging
 import os
-from logging.handlers import RotatingFileHandler, SocketHandler
-
-
-class CTCPLogstashHandler(SocketHandler, object):
-    """Python logging handler for Logstash. Sends events over TCP.
-    :param host: The host of the logstash server.
-    :param port: The port of the logstash server (default 5959).
-    :param message_type: The type of the message (default logstash).
-    :param fqdn; Indicates whether to show fully qualified domain name or not (default False).
-    :param version: version of logstash event schema (default is 0).
-    :param tags: list of tags for a logger (default is None).
-    """
-
-    def __init__(self, host, port=5959, message_type='logstash', tags=None, fqdn=False, app_id='app_id'):
-        super(CTCPLogstashHandler, self).__init__(host, port)
-        from logstash import LogstashFormatterVersion1
-
-        self.app_id = app_id
-        self.formatter = LogstashFormatterVersion1(message_type, tags, fqdn)
-
-    def makePickle(self, record):
-        record.app_id = self.app_id
-        return self.formatter.format(record) + b'\n'
+from logging.handlers import RotatingFileHandler
 
 
 class LogBuilder:
@@ -58,8 +36,18 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_logstash_handler(self, host, port, app_id, level=logging.ERROR):
-        handler = CTCPLogstashHandler(host, port, app_id=app_id)
+    def add_logstash_handler(self, host, port, app_id, level=logging.ERROR, database_path=None):
+        from logstash_async.handler import AsynchronousLogstashHandler
+        from logstash_async.formatter import LogstashFormatter
+
+        class CustomFormatter(LogstashFormatter):
+            def _move_extra_record_fields_to_prefix(self, message):
+                super()._move_extra_record_fields_to_prefix(message)
+                message['app_id'] = app_id
+
+        handler = AsynchronousLogstashHandler(host, port, database_path=database_path or f'/tmp/logstash_{app_id}.db')
+
+        handler.formatter = CustomFormatter(tags=[app_id])
         handler.setLevel(level)
         self.handlers.append(handler)
         return self

@@ -30,7 +30,10 @@ def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
         return datetime.datetime.strptime(formatted_date_with_corrections, "%Y-%m-%d %H:%M:%S.%f")
 
     if time_zone not in init_time:
-        time = get_time_from__ntp_client()
+        try:
+            time = get_time_from__ntp_client()
+        except:
+            return datetime.datetime.now()
         init_time[time_zone] = (datetime.datetime.now(), time)
     time_local, time_internet = init_time[time_zone]
     now = time_internet + datetime.timedelta(seconds=(datetime.datetime.now() - time_local).total_seconds())
