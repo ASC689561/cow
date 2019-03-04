@@ -47,6 +47,6 @@ def auto_try_catch(method):
             code = ex.__dict__.get('code', None)
             if code is not None:
                 return jsonify({'code': code, 'status': 'error', 'data': None, 'message': str(ex)}), code, {'ContentType': 'application/json'}
-            return jsonify({'code': UNKNOWN_EXCEPTION, 'status': 'error', 'data': None, 'message': str(ex)}), 200, {'ContentType': 'application/json'}
+            return jsonify({'code': UNKNOWN_EXCEPTION, 'status': 'error', 'data': None, 'message': str(ex)}), 500, {'ContentType': 'application/json'}
 
     return try_catch
