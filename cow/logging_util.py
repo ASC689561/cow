@@ -36,6 +36,34 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
+    def add_redis_handler(self, host, port, app_id, level=logging.ERROR, database_path=None):
+
+        import logging
+        import redis
+        from logstash_async.formatter import LogstashFormatter
+
+        class RedisHandler(logging.Handler):
+            def __init__(self, host='localhost', port=6379):
+                logging.Handler.__init__(self)
+
+                self.r_server = redis.Redis(host, port)
+                self.formatter = logging.Formatter("%(asctime)s - %(message)s")
+
+            def emit(self, record):
+                record.app_id = app_id
+                self.r_server.rpush('log', self.format(record))
+
+        class CustomFormatter(LogstashFormatter):
+            def _move_extra_record_fields_to_prefix(self, message):
+                message['app_id'] = app_id
+
+        handler = RedisHandler(host, port)
+
+        handler.formatter = CustomFormatter(tags=[app_id])
+        handler.setLevel(level)
+        self.handlers.append(handler)
+        return self
+
     def add_logstash_handler(self, host, port, app_id, level=logging.ERROR, database_path=None):
         from logstash_async.handler import AsynchronousLogstashHandler
         from logstash_async.formatter import LogstashFormatter
