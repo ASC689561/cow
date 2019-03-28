@@ -6,7 +6,7 @@ from .curl_util import execute_curl
 from .debug import is_debug
 from .dict_utils import remove_key_except, md5
 from .function_util import timing, ignore_exception
-from .lazy_load import LazyProperty, LazyWrapper
+from .lazy_load import LazyProperty
 from .logging_util import LogBuilder
 from .notification import notify_message
 from .path_util import ensure_directory_exists, get_callee_path
