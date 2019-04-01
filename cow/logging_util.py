@@ -2,6 +2,8 @@ import logging
 import os
 from logging.handlers import RotatingFileHandler
 
+import requests
+
 
 class LogBuilder:
     def __init__(self):
@@ -21,6 +23,38 @@ class LogBuilder:
         handler.setLevel(level)
         if format:
             handler.setFormatter(logging.Formatter(format))
+        self.handlers.append(handler)
+        return self
+
+    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn', port=80, app_id='test-log', level=logging.ERROR, database_path=None,
+                                  headers=None):
+        from logstash_async.handler import AsynchronousLogstashHandler
+        from logstash_async.formatter import LogstashFormatter
+
+        class HttpTransport:
+
+            def __init__(self, host, port, **kwargs):
+                self._host = host
+                self._port = port
+                self._headers = kwargs['headers'] if 'headers' in kwargs and kwargs['headers'] else {'authorization': 'Basic bWlzYTpNaXNhQDIwMTk='}
+
+            def close(self):
+                pass
+
+            def send(self, data: dict, use_logging=None):
+                for v in data:
+                    requests.post(url=self._host, data=v, headers=self._headers)
+
+        class CustomFormatter(LogstashFormatter):
+            def _move_extra_record_fields_to_prefix(self, message):
+                super()._move_extra_record_fields_to_prefix(message)
+                message['app_id'] = app_id
+
+        handler = AsynchronousLogstashHandler(host, port, transport=HttpTransport(host, port, headers=headers),
+                                              database_path=database_path or f'/tmp/logstash_{app_id}.db')
+
+        handler.formatter = CustomFormatter(tags=[app_id])
+        handler.setLevel(level)
         self.handlers.append(handler)
         return self
 
@@ -86,7 +120,7 @@ if __name__ == '__main__':
         bd = LogBuilder()
         bd.add_stream_handler(level=logging.DEBUG)
         bd.add_rotating_file_handler(log_path='.', level=logging.WARNING)
-        bd.add_logstash_handler(host='117.6.16.176', port=91, app_id='test', level=logging.WARNING)
+        bd.add_http_logstash_handler(app_id='test-log', level=logging.WARNING)
         bd.set_format("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         bd.build()
 
