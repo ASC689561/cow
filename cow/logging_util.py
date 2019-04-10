@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from logging.handlers import RotatingFileHandler
@@ -36,7 +37,8 @@ class LogBuilder:
             def __init__(self, host, port, **kwargs):
                 self._host = host
                 self._port = port
-                self._headers = kwargs['headers'] if 'headers' in kwargs and kwargs['headers'] else {'authorization': 'Basic bWlzYTpNaXNhQDIwMTk='}
+                self._headers = kwargs['headers'] if 'headers' in kwargs and kwargs['headers'] else {'Authorization': 'Basic bWlzYTpNaXNhQDIwMTk=',
+                                                                                                     'Content-Type': 'application/json; charset=utf-8'}
 
             def close(self):
                 pass
@@ -120,7 +122,7 @@ if __name__ == '__main__':
         bd = LogBuilder()
         bd.add_stream_handler(level=logging.DEBUG)
         bd.add_rotating_file_handler(log_path='.', level=logging.WARNING)
-        bd.add_http_logstash_handler(app_id='test-log', level=logging.WARNING)
+        bd.add_http_logstash_handler(app_id='test-log', level=logging.INFO)
         bd.set_format("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         bd.build()
 
@@ -128,7 +130,7 @@ if __name__ == '__main__':
     init_log()
 
     logging.debug("debug")
-    logging.info("info")
+    logging.info("Kiểm tra log tiếng việt")
     logging.warning("warning")
     logging.error("error")
     logging.critical("critical")
