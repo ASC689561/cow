@@ -27,7 +27,8 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn', port=80, app_id='test-log', level=logging.ERROR, database_path=None,
+    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn', port=80, app_id='test-log',
+                                  level=logging.ERROR, database_path=None,
                                   headers=None):
         from logstash_async.handler import AsynchronousLogstashHandler
         from logstash_async.formatter import LogstashFormatter
@@ -37,8 +38,9 @@ class LogBuilder:
             def __init__(self, host, port, **kwargs):
                 self._host = host
                 self._port = port
-                self._headers = kwargs['headers'] if 'headers' in kwargs and kwargs['headers'] else {'Authorization': 'Basic bWlzYTpNaXNhQDIwMTk=',
-                                                                                                     'Content-Type': 'application/json; charset=utf-8'}
+                self._headers = kwargs['headers'] if 'headers' in kwargs and kwargs['headers'] else {
+                    'Authorization': 'Basic bWlzYTpNaXNhQDIwMTk=',
+                    'Content-Type': 'application/json; charset=utf-8'}
 
             def close(self):
                 pass
