@@ -53,7 +53,7 @@ class LogBuilder:
                 message['app_id'] = app_id
 
         handler = AsynchronousLogstashHandler(host, port, transport=HttpTransport(host, port, headers=headers),
-                                              database_path=database_path or f'/tmp/logstash_{app_id}.db')
+                                              database_path=database_path)
 
         handler.formatter = CustomFormatter(tags=[app_id])
         handler.setLevel(level)
