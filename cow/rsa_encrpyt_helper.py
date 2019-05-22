@@ -33,7 +33,7 @@ class RSAEncryptHelper:
     def encrypt(self, message):
         m = message.encode()
         crypto = rsa.encrypt(m, self.pubkey)
-        return base64.b64encode(crypto)
+        return base64.b64encode(crypto).decode()
 
     def decrypt(self, encoded_message):
         m = base64.b64decode(encoded_message)
