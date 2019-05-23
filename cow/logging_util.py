@@ -27,7 +27,7 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn', port=80, app_id='test-log',
+    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn', port=80, app_id='test-log', system_id='test-log',
                                   level=logging.ERROR, database_path=None,
                                   headers=None):
         from logstash_async.handler import AsynchronousLogstashHandler
@@ -53,6 +53,7 @@ class LogBuilder:
             def _move_extra_record_fields_to_prefix(self, message):
                 super()._move_extra_record_fields_to_prefix(message)
                 message['app_id'] = app_id
+                message['system_id'] = system_id
 
         handler = AsynchronousLogstashHandler(host, port, transport=HttpTransport(host, port, headers=headers),
                                               database_path=database_path)
