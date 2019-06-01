@@ -45,8 +45,11 @@ class LogBuilder:
                 pass
 
             def send(self, data: dict, use_logging=None):
-                for v in data:
-                    requests.post(url=self._host, data=v, headers=self._headers)
+                try:
+                    for v in data:
+                        requests.post(url=self._host, data=v, headers=self._headers)
+                except:
+                    pass
 
         class CustomFormatter(LogstashFormatter):
             def _move_extra_record_fields_to_prefix(self, message):
