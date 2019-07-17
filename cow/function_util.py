@@ -26,17 +26,24 @@ def timing(func=None, name=None, log_level=logging.DEBUG):
     return timing
 
 
-def ignore_exception(time=3):
+def ignore_exception(times=1, reraise=True):
+    """
+    Retry and Ignore exception
+    :param time: times to retry
+    :param reraise: Reraise exception if True
+    """
     def wrapped(func):
         @functools.wraps(func)
         def ignore(*args, **kw):
-            for v in range(0, time):
+            for v in range(0, times):
                 try:
                     result = func(*args, **kw)
                     return result
                 except Exception as ex:
-                    if v == time - 1:
-                        raise ex
+                    logging.exception(ex)
+                    if v == times - 1:
+                        if reraise:
+                            raise ex
 
         return ignore
 
