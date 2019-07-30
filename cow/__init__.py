@@ -1,6 +1,7 @@
 import os
 import sys
 
+from .text_generate import generate_permutation
 from .cache import create_disk_cache
 from .curl_util import execute_curl
 from .debug import is_debug, is_docker
