@@ -44,7 +44,7 @@ class LogBuilder:
             def close(self):
                 pass
 
-            def send(self, data: dict, use_logging=None):
+            def send(self, data: dict):
                 try:
                     for v in data:
                         requests.post(url=self._host, data=v, headers=self._headers)
@@ -77,7 +77,7 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_redis_handler(self, host, port, app_id, level=logging.ERROR, database_path=None):
+    def add_redis_handler(self, host, port, app_id, level=logging.ERROR):
 
         import logging
         import redis
@@ -105,28 +105,12 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_logstash_handler(self, host, port, app_id, level=logging.ERROR, database_path=None):
-        from logstash_async.handler import AsynchronousLogstashHandler
-        from logstash_async.formatter import LogstashFormatter
-
-        class CustomFormatter(LogstashFormatter):
-            def _move_extra_record_fields_to_prefix(self, message):
-                super()._move_extra_record_fields_to_prefix(message)
-                message['app_id'] = app_id
-
-        handler = AsynchronousLogstashHandler(host, port, database_path=database_path or f'/tmp/logstash_{app_id}.db')
-
-        handler.formatter = CustomFormatter(tags=[app_id])
-        handler.setLevel(level)
-        self.handlers.append(handler)
-        return self
-
 
 if __name__ == '__main__':
     def init_log():
         bd = LogBuilder()
         bd.add_stream_handler(level=logging.DEBUG)
-        bd.add_rotating_file_handler(log_path='.', level=logging.WARNING)
+        bd.add_rotating_file_handler(log_path='/tmp/log', level=logging.WARNING)
         bd.add_http_logstash_handler(app_id='test-log', level=logging.INFO)
         bd.set_format("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         bd.build()
