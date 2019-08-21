@@ -1,4 +1,4 @@
 import observer
-import visitor
+# import visitor
 import singleton
 import service_registry

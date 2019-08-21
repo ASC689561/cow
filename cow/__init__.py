@@ -18,5 +18,5 @@ from .webservice_util import *
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/visitor")
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/visitor")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/service_registry")
