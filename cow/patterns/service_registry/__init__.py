@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from kazoo.client import KazooClient
 
 import cow
 import cow.patterns

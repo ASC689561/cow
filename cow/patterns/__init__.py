@@ -1,4 +1,4 @@
-from .observer.observer import Publisher, Subscriber
-from .service_registry import ServiceRegistry, ZKServiceRegistry
-from .singleton.singleton import Singleton, singleton
-from .visitor import on, when
+import service_registry
+import observer
+import visitor
+import singleton
