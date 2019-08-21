@@ -39,6 +39,7 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
         self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': endpoint}).encode(), ephemeral=True, sequence=True)
 
     def export_env(self):
+        path = self._mpath('')
         svc = self.zk_client.get_children(path)
         all_service = set()
 
