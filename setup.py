@@ -5,7 +5,7 @@ setup(
     version='1.1.1',
     packages=['cow',
               'cow.patterns',
-              'cow.patterns.service_resgistry',
+              'cow.patterns.service_registry',
               'cow.patterns.observer',
               'cow.patterns.singleton',
               'cow.patterns.visitor'],
