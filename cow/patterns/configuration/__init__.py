@@ -47,4 +47,7 @@ class ZKConfigBase(ConfigBase, metaclass=Singleton):
         self.zk_client.set(self.make_path(path), json.dumps(data))
 
     def get_children(self, path):
-        return self.tree_cache.get_children(self.make_path(path))
+        relative_path = self.make_path(path)
+        children = [x for x in self.tree_cache.get_children(relative_path)]
+        children = [os.path.join(relative_path, x) for x in children]
+        return children
