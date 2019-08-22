@@ -51,3 +51,19 @@ class ZKConfigBase(ConfigBase, metaclass=Singleton):
         children = [x for x in self.tree_cache.get_children(relative_path)]
         children = [os.path.join(relative_path, x) for x in children]
         return children
+
+
+if __name__ == '__main__':
+    class TestConfig(ZKConfigBase):
+
+        def __init__(self, zk_path, zk_client):
+            super(TestConfig, self).__init__(zk_path=zk_path, zk_client=zk_client)
+
+        @property
+        def config(self):
+            return self.get('config', default='abc')
+
+
+    from kazoo.client import KazooClient
+
+    TestConfig(zk_client=KazooClient(os.environ.get('ZOOKEEPER', 'localhost:2181')), zk_path='/chatbot/configs')
