@@ -8,7 +8,8 @@ setup(
               'cow.patterns.service_registry',
               'cow.patterns.observer',
               'cow.patterns.singleton',
-              'cow.patterns.visitor'
+              'cow.patterns.visitor',
+              'cow.patterns.configuration',
               ],
     zip_safe=False,
     install_requires=['requests', 'rsa', 'ntplib', 'pytz', 'python-logstash-async']
