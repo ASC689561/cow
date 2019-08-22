@@ -15,7 +15,7 @@ class ConfigBase:
 
 class ZKConfigBase(ConfigBase, metaclass=Singleton):
 
-    def __init__(self, zk_path='/config', zk_client=None):
+    def __init__(self, zk_client=None, zk_path='/config'):
         self.zk_path = zk_path
         self.zk_client = zk_client
 
@@ -55,7 +55,6 @@ class ZKConfigBase(ConfigBase, metaclass=Singleton):
 
 if __name__ == '__main__':
     class TestConfig(ZKConfigBase):
-
         def __init__(self, zk_path, zk_client):
             super(TestConfig, self).__init__(zk_path=zk_path, zk_client=zk_client)
 

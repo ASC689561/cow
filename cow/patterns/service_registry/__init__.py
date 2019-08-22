@@ -33,9 +33,13 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
     def _mpath(self, relative_path):
         return os.path.join(self.zk_path, relative_path)
 
-    def register(self, service, endpoint):
+    def register(self, service, endpoint, *args):
         path = self._mpath(service)
-        self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': endpoint}).encode(), ephemeral=True, sequence=True)
+        self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': endpoint}).encode(),
+                              ephemeral=True, sequence=True)
+        for v in args:
+            self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': v}).encode(),
+                                  ephemeral=True, sequence=True)
 
     def export_env(self):
         path = self._mpath('')
