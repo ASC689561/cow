@@ -16,6 +16,7 @@ from .string_util import keymap_replace
 from .time_utils import get_ntp_time
 from .webservice_util import *
 
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/visitor")
