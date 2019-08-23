@@ -47,10 +47,11 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
                                   ephemeral=True, sequence=True)
 
     def export_env(self, service, *args):
-        path = self._mpath('')
-        all_service = set([service].extend(args))
+        services = [service]
+        services.extend(args or [])
+        services = set(services)
 
-        for s in all_service:
+        for s in services:
             if s:
                 value = self.get_service(s)
                 logging.info("Export {}={} to env".format(s, value))
