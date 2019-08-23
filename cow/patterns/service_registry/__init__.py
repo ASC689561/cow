@@ -18,8 +18,13 @@ class ServiceRegistry:
 class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
 
     def __init__(self, zk_path='/services', zk_client=None):
+        if zk_client is None:
+            from kazoo.client import KazooClient
+            zk_client = KazooClient(os.environ.get('ZOOKEEPER', 'localhost:2181'))
+
         self.zk_path = zk_path
         self.zk_client = zk_client
+
         from kazoo.recipe.cache import TreeCache
         self.tree_cache = TreeCache(zk_client, zk_path)
         zk_client.start()
@@ -41,17 +46,9 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
             self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': v}).encode(),
                                   ephemeral=True, sequence=True)
 
-    def export_env(self):
+    def export_env(self, service, *args):
         path = self._mpath('')
-        svc = self.zk_client.get_children(path)
-        all_service = set()
-
-        for v in svc:
-            data, _ = self.zk_client.get(self._mpath(v))
-            if data is None:
-                continue
-            json_obj = json.loads(data.decode())
-            all_service.add(json_obj.get('service', ''))
+        all_service = set([service].extend(args))
 
         for s in all_service:
             if s:
