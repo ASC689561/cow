@@ -47,8 +47,8 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
                                   ephemeral=True, sequence=True)
 
     def export_env(self, service, *args):
-        path = self._mpath('')
-        services = set([service])
+        logging.info("export_env")
+        services = {service}
         services.update(args)
 
         for s in services:
