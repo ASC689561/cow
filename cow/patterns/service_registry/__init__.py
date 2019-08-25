@@ -47,7 +47,6 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
                                   ephemeral=True, sequence=True)
 
     def export_env(self, service, *args):
-
         services = {service}
         services.update(args)
         logging.info("export_env: {}".format(str(services)))
@@ -60,30 +59,22 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
 
     def get_service(self, service, wait=False):
         logging.info("get_service: {}".format(service))
-
         path = self._mpath('')
-        logging.info("x")
-        logging.info( str(self.zk_client.hosts))
-        logging.info( path)
+        logging.info(str(self.zk_client.hosts))
+        logging.info(path)
         svc = self.zk_client.get_children(path)
-        logging.info("a")
 
         times = 10
         while times >= 0:
             logging.info(times)
-            logging.info("b")
 
             times -= 1
 
             all_service = []
             for v in svc:
-                logging.info("aa")
-
                 data, _ = self.zk_client.get(self._mpath(v))
                 if data is None:
                     continue
-                logging.info("axx")
-
                 json_obj = json.loads(data.decode())
                 if service == json_obj.get('service', ''):
                     all_service.append(json_obj['endpoint'])
