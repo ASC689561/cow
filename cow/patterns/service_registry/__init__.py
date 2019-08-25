@@ -62,18 +62,27 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
         logging.info("get_service: {}".format(service))
 
         path = self._mpath('')
+        logging.info("x")
+
         svc = self.zk_client.get_children(path)
+        logging.info("a")
+
         times = 10
         while times >= 0:
             logging.info(times)
+            logging.info("b")
 
             times -= 1
 
             all_service = []
             for v in svc:
+                logging.info("aa")
+
                 data, _ = self.zk_client.get(self._mpath(v))
                 if data is None:
                     continue
+                logging.info("axx")
+
                 json_obj = json.loads(data.decode())
                 if service == json_obj.get('service', ''):
                     all_service.append(json_obj['endpoint'])
