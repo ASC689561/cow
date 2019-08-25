@@ -48,7 +48,7 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
 
     def export_env(self, service, *args):
         path = self._mpath('')
-        all_service = set([service].extend(args))
+        all_service = set([service].extend(args or []))
 
         for s in all_service:
             if s:
