@@ -61,7 +61,9 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
 
         path = self._mpath('')
         svc = self.zk_client.get_children(path)
-        while True:
+        times = 10
+        while times >= 0:
+            times -= 1
 
             all_service = []
             for v in svc:
@@ -86,7 +88,7 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
                         result = v
             if not wait or result:
                 return result
-            logging.warning("Waiting for service: " + service)
+            logging.error("Waiting for service: " + service)
             import time
             time.sleep(1)
 
