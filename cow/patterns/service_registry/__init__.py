@@ -57,7 +57,8 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
                 logging.info("Export {}={} to env".format(s, value))
                 os.environ[s] = value
 
-    def get_service(self, service, wait=True):
+    def get_service(self, service, wait=False):
+        logging.info("export_env")
 
         path = self._mpath('')
         svc = self.zk_client.get_children(path)
