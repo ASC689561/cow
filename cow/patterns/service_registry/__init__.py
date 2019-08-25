@@ -63,7 +63,8 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
 
         path = self._mpath('')
         logging.info("x")
-
+        logging.info( str(self.zk_client.hosts))
+        logging.info( path)
         svc = self.zk_client.get_children(path)
         logging.info("a")
 
