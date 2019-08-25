@@ -22,12 +22,12 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
             from kazoo.client import KazooClient
             zk_client = KazooClient(os.environ.get('ZOOKEEPER', 'localhost:2181'))
 
+        zk_client.restart()
         self.zk_path = zk_path
         self.zk_client = zk_client
 
         from kazoo.recipe.cache import TreeCache
         self.tree_cache = TreeCache(zk_client, zk_path)
-        zk_client.start()
         self.zk_client.ensure_path(self.zk_path)
         self.tree_cache.start()
         while not self.tree_cache._is_initialized:

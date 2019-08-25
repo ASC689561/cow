@@ -39,6 +39,7 @@ class ZKConfigBase(ConfigBase, metaclass=Singleton):
     def get_json(self, relative_path=''):
         relative_path = self.make_path(relative_path)
         data = self.tree_cache.get_data(relative_path)
+        print(str(data))
         return json.loads(data[1].decode())
 
     def get(self, key, path='', default=None):
