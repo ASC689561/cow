@@ -1,8 +1,6 @@
 import json
 import logging
-import os
 
-import cow
 import cow.patterns
 from cow.patterns.singleton import Singleton
 
@@ -11,7 +9,7 @@ class ServiceRegistry:
     def register(self, service, endpoint):
         pass
 
-    def get_service(self, service, wait=True):
+    def get_service(self, service):
         pass
 
 
@@ -40,9 +38,19 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
 
     def register(self, service, endpoint, *args):
         path = self._mpath(service)
-        self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': endpoint}).encode(),
-                              ephemeral=True, sequence=True)
-        for v in args:
+        svc_all = [endpoint]
+        svc_all.extend(args)
+
+        for v in svc_all:
+
+            logging.info('Register service:' + v)
+
+            if 'localhost' in v and 'server_ip' in os.environ:
+                new_host = v.replace('localhost', os.environ['server_ip'])
+                logging.info('Register service:' + new_host)
+                self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': new_host}).encode(),
+                                      ephemeral=True, sequence=True)
+
             self.zk_client.create(path, value=json.dumps({'service': service, 'endpoint': v}).encode(),
                                   ephemeral=True, sequence=True)
 
@@ -57,47 +65,35 @@ class ZKServiceRegistry(ServiceRegistry, metaclass=Singleton):
                 logging.info("Export {}={} to env".format(s, value))
                 os.environ[s] = value
 
-    def get_service(self, service, wait=False):
+    def get_service(self, service):
         logging.info("get_service: {}".format(service))
         path = self._mpath('')
-        logging.info(str(self.zk_client.hosts))
-        logging.info(path)
         svc = self.zk_client.get_children(path)
 
-        times = 10
-        while times >= 0:
-            logging.info(times)
+        all_service = []
+        for v in svc:
+            data, _ = self.zk_client.get(self._mpath(v))
+            if data is None:
+                continue
+            json_obj = json.loads(data.decode())
+            if service == json_obj.get('service', ''):
+                all_service.append(json_obj['endpoint'])
 
-            times -= 1
-
-            all_service = []
-            for v in svc:
-                data, _ = self.zk_client.get(self._mpath(v))
-                if data is None:
-                    continue
-                json_obj = json.loads(data.decode())
-                if service == json_obj.get('service', ''):
-                    all_service.append(json_obj['endpoint'])
-
-            result = None
-
-            if not all_service:
-                result = None
-            else:
-                is_docker = cow.is_docker()
-
-                for v in all_service:
-                    if is_docker and 'localhost' not in v:
-                        result = v
-                    if not is_docker and 'localhost' in v:
-                        result = v
-            if not wait or result:
-                return result
-            logging.error("Waiting for service: " + service)
-            import time
-            time.sleep(1)
+        if cow.is_docker():
+            for v in all_service:
+                if 'localhost' not in v:
+                    return v
+        else:
+            for v in all_service:
+                if 'localhost' in v:
+                    return v
 
 
 if __name__ == '__main__':
+    import cow
+    import os
+
+    os.environ['server_ip'] = '112.113.253.13'
+    cow.LogBuilder().build()
     x = ZKServiceRegistry(zk_path='/test')
-    z.export_env()
+    x.register('db', 'http://localhost:9090', 'db:8001', 'http://abc:1212')
