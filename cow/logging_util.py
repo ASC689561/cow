@@ -44,7 +44,7 @@ class LogBuilder:
             def close(self):
                 pass
 
-            def send(self, data: dict):
+            def send(self, data: dict,use_logging=None):
                 try:
                     for v in data:
                         requests.post(url=self._host, data=v, headers=self._headers)
