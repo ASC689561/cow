@@ -15,6 +15,7 @@ from .webservice_util import *
 from .class_util import get_subclasses
 
 
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/singleton")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/visitor")
