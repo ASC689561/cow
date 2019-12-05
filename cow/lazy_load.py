@@ -33,3 +33,5 @@ if __name__ == '__main__':
     print(x.value)
     print(x.value)
     print(x.value)
+    x.__dict__.pop('value')
+    x.value.clear()

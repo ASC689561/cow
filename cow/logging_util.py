@@ -12,7 +12,8 @@ class LogBuilder:
 
     def build(self):
         logging.getLogger().handlers.clear()
-        logging.basicConfig(level=logging.DEBUG, handlers=self.handlers, format=self.format_str)
+        logging.basicConfig(level=logging.DEBUG,  format=self.format_str)
+        logging.getLogger().handlers.extend(self.handlers)
 
     def set_format(self, format_str):
         self.format_str = format_str

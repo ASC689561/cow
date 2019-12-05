@@ -3,7 +3,8 @@ import logging
 from contextlib import contextmanager
 from timeit import default_timer
 
-from .cache import create_disk_cache
+import ntplib
+import pytz
 
 init_time = None
 
@@ -17,17 +18,7 @@ def Timer():
     elapser = lambda: end - start
 
 
-def init_current_time():
-    global init_time
-    init_time = create_disk_cache('/tmp/time_cache')
-
-
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
-    if init_time is None:
-        init_current_time()
-    import ntplib
-    import pytz
-
     local_time_zone = pytz.timezone("Asia/Ho_Chi_Minh")  # time zone name from Olson database
 
     def get_time_from__ntp_client():
