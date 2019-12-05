@@ -6,7 +6,6 @@ setup(
     packages=['cow',
               'cow.patterns',
               'cow.patterns.observer',
-              'cow.patterns.singleton',
               'cow.patterns.visitor'
               ],
     zip_safe=False,
