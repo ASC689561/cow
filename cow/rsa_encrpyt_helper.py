@@ -6,7 +6,9 @@ import rsa
 
 class RSAEncryptHelper:
 
-    def __init__(self, path=os.getenv("HOME") + '/.ssh'):
+    def __init__(self, path=None):
+        if path is None:
+            path = os.getenv("HOME") + '/.ssh'
         self.path = path
         self.public_path = os.path.join(self.path, 'public.pem')
         self.private_path = os.path.join(self.path, 'private.pem')
