@@ -12,12 +12,8 @@ class LogBuilder:
 
     def build(self):
         logging.getLogger().handlers.clear()
-        logging.basicConfig(level=logging.DEBUG,  format=self.format_str)
+        logging.basicConfig(level=logging.DEBUG, format=self.format_str)
         logging.getLogger().handlers.extend(self.handlers)
-
-    def set_format(self, format_str):
-        self.format_str = format_str
-        return self
 
     def add_stream_handler(self, level=logging.DEBUG, format=None):
         handler = logging.StreamHandler()
@@ -27,9 +23,8 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn', port=80, app_id='test-log', system_id='test-log',
-                                  level=logging.ERROR, database_path=None,
-                                  headers=None):
+    def add_http_logstash_handler(self, host='http://logapi.misa.com.vn',
+                                  port=80, app_id='test-log', system_id='test-log', level=logging.ERROR, headers=None):
         from logstash_async.handler import AsynchronousLogstashHandler
         from logstash_async.formatter import LogstashFormatter
 
@@ -45,12 +40,9 @@ class LogBuilder:
             def close(self):
                 pass
 
-            def send(self, data: dict,use_logging=None):
-                try:
-                    for v in data:
-                        requests.post(url=self._host, data=v, headers=self._headers)
-                except:
-                    pass
+            def send(self, data: dict, use_logging=None):
+                for v in data:
+                    res = requests.post(url=self._host, data=v, headers=self._headers)
 
         class CustomFormatter(LogstashFormatter):
             def _move_extra_record_fields_to_prefix(self, message):
@@ -59,7 +51,7 @@ class LogBuilder:
                 message['system_id'] = system_id
 
         handler = AsynchronousLogstashHandler(host, port, transport=HttpTransport(host, port, headers=headers),
-                                              database_path=database_path)
+                                              database_path=None)
 
         handler.formatter = CustomFormatter(tags=[app_id])
         handler.setLevel(level)
@@ -78,32 +70,36 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_redis_handler(self, host, port, app_id, level=logging.ERROR):
+    def add_redis_handler(self, redis_url, app_id, system_id, log_key='log_queue', level=logging.ERROR, redis_ttl=86400):
 
         import logging
-        import redis
+        from redis import StrictRedis
         from logstash_async.formatter import LogstashFormatter
-
-        class RedisHandler(logging.Handler):
-            def __init__(self, host='localhost', port=6379):
-                logging.Handler.__init__(self)
-
-                self.r_server = redis.Redis(host, port)
-                self.formatter = logging.Formatter("%(asctime)s - %(message)s")
-
-            def emit(self, record):
-                record.app_id = app_id
-                self.r_server.rpush('log', self.format(record))
 
         class CustomFormatter(LogstashFormatter):
             def _move_extra_record_fields_to_prefix(self, message):
+                super()._move_extra_record_fields_to_prefix(message)
                 message['app_id'] = app_id
+                message['system_id'] = system_id
 
-        handler = RedisHandler(host, port)
+        class RedisKeyHandler(logging.StreamHandler):
+            def __init__(self, key: str, ttl: int = None, **kwargs):
+                super().__init__(**kwargs)
+                self.redis_client = StrictRedis.from_url(redis_url)
+                self.key = key
+                self.ttl = ttl
 
-        handler.formatter = CustomFormatter(tags=[app_id])
-        handler.setLevel(level)
-        self.handlers.append(handler)
+                if self.ttl:
+                    self.redis_client.expire(self.key, self.ttl)
+
+            def emit(self, message: logging.LogRecord):
+                data = formatter.format(message)
+                self.redis_client.rpush(self.key, data)
+
+        formatter = CustomFormatter()
+        redis_handler = RedisKeyHandler(key=log_key, ttl=redis_ttl)
+        redis_handler.setLevel(level)
+        self.handlers.append(redis_handler)
         return self
 
 
@@ -113,7 +109,6 @@ if __name__ == '__main__':
         bd.add_stream_handler(level=logging.DEBUG)
         bd.add_rotating_file_handler(log_path='/tmp/log', level=logging.WARNING)
         bd.add_http_logstash_handler(app_id='test-log', level=logging.INFO)
-        bd.set_format("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         bd.build()
 
 
