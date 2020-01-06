@@ -1,7 +1,7 @@
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-
+import colorlog
 import requests
 
 
@@ -20,6 +20,18 @@ class LogBuilder:
         handler.setLevel(level)
         if format:
             handler.setFormatter(logging.Formatter(format))
+        self.handlers.append(handler)
+        return self
+
+    def add_stream_color_handler(self, level=logging.DEBUG, format=None):
+        handler =  colorlog.StreamHandler()
+
+        handler.setLevel(level)
+        if format:
+            handler.setFormatter(logging.Formatter(format))
+        else:
+            handler.setFormatter(colorlog.ColoredFormatter(
+                '%(log_color)s%(levelname)s:%(name)s:%(message)s'))
         self.handlers.append(handler)
         return self
 
@@ -106,7 +118,8 @@ class LogBuilder:
 if __name__ == '__main__':
     def init_log():
         bd = LogBuilder()
-        bd.add_stream_handler(level=logging.DEBUG)
+        # bd.add_stream_handler(level=logging.DEBUG)
+        bd.add_stream_color_handler(level=logging.DEBUG)
         bd.add_rotating_file_handler(log_path='/tmp/log', level=logging.WARNING)
         bd.add_http_logstash_handler(app_id='test-log', level=logging.INFO)
         bd.build()
