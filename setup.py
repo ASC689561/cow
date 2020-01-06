@@ -9,5 +9,5 @@ setup(
               'cow.patterns.visitor'
               ],
     zip_safe=False,
-    install_requires=['requests', 'rsa', 'ntplib', 'pytz', 'python-logstash-async',"coloredlogs"]
+    install_requires=['requests', 'rsa', 'ntplib', 'pytz', 'python-logstash-async',"colorlog"]
 )
