@@ -13,7 +13,7 @@ from .string_util import keymap_replace
 from .time_utils import get_ntp_time,Timer
 from .webservice_util import *
 from .class_util import get_subclasses
-from .streamlitutils import run,Page
+from .streamlitutils import run,Page,set_max_width
 
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
