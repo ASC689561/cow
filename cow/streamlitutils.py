@@ -12,6 +12,7 @@ class Page:
 
 
 def set_max_width():
+    import streamlit as st
     max_width_str = f"max-width: 2000px;"
     st.markdown(
         f"""
