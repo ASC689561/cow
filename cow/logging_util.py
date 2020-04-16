@@ -1,8 +1,8 @@
+import colorlog
 import logging
 import os
-from logging.handlers import RotatingFileHandler
-import colorlog
 import requests
+from logging.handlers import RotatingFileHandler
 
 
 class LogBuilder:
