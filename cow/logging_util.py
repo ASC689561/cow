@@ -12,8 +12,7 @@ class LogBuilder:
 
     def build(self):
         logging.getLogger().handlers.clear()
-        logging.basicConfig(level=logging.DEBUG, format=self.format_str)
-        logging.getLogger().handlers.extend(self.handlers)
+        logging.basicConfig(level=logging.DEBUG, format=self.format_str, handlers=self.handlers)
 
     def add_stream_handler(self, level=logging.DEBUG, format=None):
         handler = logging.StreamHandler()
@@ -24,7 +23,7 @@ class LogBuilder:
         return self
 
     def add_stream_color_handler(self, level=logging.DEBUG, format=None):
-        handler =  colorlog.StreamHandler()
+        handler = colorlog.StreamHandler()
 
         handler.setLevel(level)
         if format:
@@ -82,7 +81,8 @@ class LogBuilder:
         self.handlers.append(handler)
         return self
 
-    def add_redis_handler(self, redis_url, app_id, system_id, log_key='log_queue', level=logging.ERROR, redis_ttl=86400):
+    def add_redis_handler(self, redis_url, app_id, system_id, log_key='log_queue', level=logging.ERROR,
+                          redis_ttl=86400):
 
         import logging
         from redis import StrictRedis
