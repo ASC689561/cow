@@ -32,6 +32,7 @@ def ignore_exception(times=1, reraise=True):
     :param time: times to retry
     :param reraise: Reraise exception if True
     """
+
     def wrapped(func):
         @functools.wraps(func)
         def ignore(*args, **kw):

@@ -1,21 +1,10 @@
 import datetime
 import logging
-from contextlib import contextmanager
-from timeit import default_timer
 
 import ntplib
 import pytz
 
 init_time = None
-
-
-@contextmanager
-def Timer():
-    start = default_timer()
-    elapser = lambda: default_timer() - start
-    yield lambda: elapser()
-    end = default_timer()
-    elapser = lambda: end - start
 
 
 def get_ntp_time(time_zone='Asia/Ho_Chi_Minh') -> datetime.datetime:
