@@ -1,4 +1,4 @@
-from .class_util import get_subclasses
+from cow.class_util import get_subclasses
 
 
 class Page:
@@ -13,7 +13,7 @@ class Page:
 
 def set_max_width():
     import streamlit as st
-    max_width_str = f"max-width: 2000px;"
+    max_width_str = "max-width: 2000px;"
     st.markdown(
         f"""
     <style>

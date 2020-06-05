@@ -13,8 +13,9 @@ from .string_util import keymap_replace
 from .time_utils import get_ntp_time
 from .webservice_util import *
 from .class_util import get_subclasses
-from .streamlitutils import run,Page,set_max_width
 from .timer import Timer
+
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/observer")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/patterns/visitor")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/streamlit_")

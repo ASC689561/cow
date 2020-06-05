@@ -6,8 +6,9 @@ setup(
     packages=['cow',
               'cow.patterns',
               'cow.patterns.observer',
-              'cow.patterns.visitor'
+              'cow.patterns.visitor',
+              'cow.streamlit_'
               ],
     zip_safe=False,
-    install_requires=['requests', 'rsa', 'ntplib==0.3.4', 'pytz', 'python-logstash-async',"colorlog"]
+    install_requires=['requests', 'rsa', 'ntplib==0.3.4', 'pytz', 'python-logstash-async', "colorlog"]
 )
