@@ -1,3 +1,6 @@
+import re
+
+
 def __p(text, dic):
     for k, v in dic.items():
         for r in v:
@@ -13,7 +16,11 @@ def __p(text, dic):
 
 
 def generate_permutation(text):
-    import re
+    """
+    generate_permutation('xin chao (anh|chi) ten em la (hoa|lan)')
+    :param text:
+    :return:
+    """
     all_p = list(re.finditer('\((.*?)\)', text, re.MULTILINE))
     d = {}
     if len(all_p) == 0:
@@ -27,3 +34,7 @@ def generate_permutation(text):
             k = k.replace('  ', ' ')
         k = k.strip()
         yield k
+
+
+if __name__ == '__main__':
+    print(list(generate_permutation('xin chao (anh|chi) ten em la (hoa|lan)')))

@@ -6,7 +6,6 @@ from timeit import default_timer
 
 
 class Timer(object):
-
     """ A timer as a context manager
     Wraps around a timer. A custom timer can be passed
     to the constructor. The default timer is timeit.default_timer.
@@ -80,6 +79,7 @@ def timer(logger=None, level=logging.INFO,
     """ Function decorator displaying the function execution time
     All kwargs are the arguments taken by the Timer class constructor.
     """
+
     # store Timer kwargs in local variable so the namespace isn't polluted
     # by different level args and kwargs
 
@@ -93,27 +93,30 @@ def timer(logger=None, level=logging.INFO,
                 'execution_time': t.elapsed,
             }
             if logger:
-                logger.log(
-                    level,
-                    fmt % context,
-                    extra=context)
+                logger.log(level, fmt % context, extra=context)
             else:
                 print(fmt % context)
             return out
+
         return wrapped
-    if (len(func_or_func_args) == 1
-            and isinstance(func_or_func_args[0], collections.Callable)):
+
+    if len(func_or_func_args) == 1 \
+            and isinstance(func_or_func_args[0], collections.Callable):
         return wrapped_f(func_or_func_args[0])
     else:
         return wrapped_f
 
+
 if __name__ == "__main__":
     import logging
     import time
+
     logging.basicConfig(level=logging.DEBUG)
+
 
     @timer(logger=logging.getLogger())
     def blah():
         time.sleep(2)
+
 
     blah()

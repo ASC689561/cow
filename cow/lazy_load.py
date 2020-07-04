@@ -4,10 +4,10 @@
 class LazyProperty(object):
     """
     class LazyClass:
-    @LazyProperty
-    def value(self):
-        print('calculate value')
-        return 1
+        @LazyProperty
+        def value(self):
+            print('calculate value')
+            return 1
     """
 
     def __init__(self, func):

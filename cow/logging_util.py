@@ -12,7 +12,8 @@ class LogBuilder:
 
     def build(self):
         logging.getLogger().handlers.clear()
-        logging.basicConfig(level=logging.DEBUG, format=self.format_str, handlers=self.handlers)
+        logging.basicConfig(level=logging.DEBUG, format=self.format_str)
+        logging.getLogger().handlers.extend(self.handlers)
 
     def add_stream_handler(self, level=logging.DEBUG, format=None):
         handler = logging.StreamHandler()

@@ -1,14 +1,14 @@
+import json
 import logging
+import subprocess
 
 
 class CurlNotFound(Exception):
     def __init__(self):
-        super(CurlNotFound, self).__init__('Curl not found in')
+        super(CurlNotFound, self).__init__('Curl not found in PATH')
 
 
 def execute_curl(curl, json_out=True) -> dict:
-    import json
-    import subprocess
     out = ''
     try:
         p = subprocess.Popen(curl, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

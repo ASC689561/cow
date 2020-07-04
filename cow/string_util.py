@@ -10,3 +10,7 @@ def keymap_replace(string: str, mappings: dict) -> str:
         replaced_string = replaced_string.replace(str(character), str(replacement)
                                                   )
     return replaced_string
+
+
+if __name__ == '__main__':
+    print(keymap_replace("hello {name}", dict(name='hoa')))
