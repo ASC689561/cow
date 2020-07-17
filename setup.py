@@ -10,5 +10,5 @@ setup(
               'cow.streamlit_'
               ],
     zip_safe=False,
-    install_requires=['requests', 'rsa', 'ntplib==0.3.4', 'pytz', 'python-logstash-async', "colorlog"]
+    install_requires=['yaml', 'requests', 'rsa', 'ntplib==0.3.4', 'pytz', "colorlog"]
 )

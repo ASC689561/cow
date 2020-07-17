@@ -1,0 +1,47 @@
+version: 1
+objects:
+  queue:
+    class: queue.Queue
+    maxsize: 1000
+formatters:
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  simple_color:
+    class: colorlog.ColoredFormatter
+    format: '%(log_color)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s'
+handlers:
+  console:
+    class: colorlog.StreamHandler
+    level: DEBUG
+    formatter: simple_color
+    stream: ext://sys.stdout
+  file:
+    class: logging.FileHandler
+    filename: 'log.log'
+    formatter: simple
+  queue_listener:
+    class: cow.logging_.QueueListenerHandler
+    handlers:
+      - cfg://handlers.console
+      - cfg://handlers.file
+    queue: cfg://objects.queue
+loggers:
+  logger1:
+    level: DEBUG
+    handlers:
+      - console
+    propagate: false
+  logger2:
+    level: WARNING
+    handlers:
+      - file
+    propagate: false
+  logger3:
+    level: DEBUG
+    handlers:
+      - queue_listener
+    propagate: false
+root:
+  level: ERROR
+  handlers:
+    - console
