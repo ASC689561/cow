@@ -4,7 +4,7 @@ setup(
     name='cow',
     version='1.1.1',
     packages=['cow',
-              'cow.streamlit_'
+              'cow.streamlit_',
               'cow.logging_'
               ],
     zip_safe=False,
