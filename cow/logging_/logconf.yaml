@@ -9,7 +9,17 @@ formatters:
   simple_color:
     class: colorlog.ColoredFormatter
     format: '%(log_color)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  slack_formater:
+    class: slack_logger.SlackFormatter
+
 handlers:
+  slack:
+    class: slack_logger.SlackHandler
+    level: DEBUG
+    url: https://hooks.slack.com/services/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t
+    icon_emoji: ':robot_face:'
+    formatter: slack_formater
+
   console:
     class: colorlog.StreamHandler
     level: DEBUG
@@ -26,21 +36,30 @@ handlers:
       - cfg://handlers.file
     queue: cfg://objects.queue
 loggers:
+  slack_logger:
+    level: DEBUG
+    handlers:
+      - slack
+    propagate: false
+
   logger1:
     level: DEBUG
     handlers:
       - console
     propagate: false
+
   logger2:
     level: WARNING
     handlers:
       - file
     propagate: false
+
   logger3:
     level: DEBUG
     handlers:
       - queue_listener
     propagate: false
+
 root:
   level: ERROR
   handlers:

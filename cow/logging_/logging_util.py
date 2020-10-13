@@ -56,14 +56,19 @@ class QueueListenerHandler(QueueHandler):
 
 if __name__ == '__main__':
     logging_config = yaml.safe_load(open('./logconf.yaml'))
-
     logging.config.dictConfig(logging_config)
 
+    slack_logger = logging.getLogger('slack_logger')
+    slack_logger.debug("debug")
+    slack_logger.info("info")
+    slack_logger.warning("warning")
+    slack_logger.critical("critical")
+
     other_logger = logging.getLogger("logger1")
-    other_logger.warning("abc")
+    other_logger.warning("warning")
     other_logger = logging.getLogger("logger2")
-    other_logger.debug("abc")
+    other_logger.debug("debug")
     other_logger = logging.getLogger("logger3")
-    other_logger.debug("abc")
+    other_logger.debug("debug")
 
     logging.debug("xyz")
