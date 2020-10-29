@@ -24,10 +24,15 @@ handlers:
     level: DEBUG
     formatter: simple_color
     stream: ext://sys.stdout
+
   file:
-    class: logging.FileHandler
-    filename: 'log.log'
+    class: logging.handlers.RotatingFileHandler
+    filename: '/tmp/log.log'
     formatter: simple
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+
   queue_listener:
     class: cow.logging_.QueueListenerHandler
     handlers:
