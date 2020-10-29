@@ -3,72 +3,61 @@ objects:
   queue:
     class: queue.Queue
     maxsize: 1000
-
 formatters:
   simple:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-
-  color:
+  simple_color:
     class: colorlog.ColoredFormatter
-    format: '%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format: '%(log_color)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  slack_formater:
+    class: slack_logger.SlackFormatter
 
 handlers:
-  elk:
-    class: cow.logging_.ELKHandler
-    level: INFO
-  #    url: http://logapi.misa.com.vn # default value
-  #    username: misa # default value
-  #    password: Misa@2019 # default value
-  #    app_id: test_log # default value
-  #    system_id: api # default value
+  slack:
+    class: slack_logger.SlackHandler
+    level: DEBUG
+    url: https://hooks.slack.com/services/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t
+    icon_emoji: ':robot_face:'
+    formatter: slack_formater
 
   console:
     class: colorlog.StreamHandler
     level: DEBUG
-    formatter: color
+    formatter: simple_color
     stream: ext://sys.stdout
-
   file:
-    class: logging.handlers.RotatingFileHandler
-    filename: '/tmp/log.log'
+    class: logging.FileHandler
+    filename: 'log.log'
     formatter: simple
-    maxBytes: 10485760 # 10MB
-    backupCount: 20
-    encoding: utf8
-
   queue_listener:
     class: cow.logging_.QueueListenerHandler
-    respect_handler_level: true
     handlers:
       - cfg://handlers.console
       - cfg://handlers.file
-      - cfg://handlers.elk
     queue: cfg://objects.queue
-
 loggers:
+  slack_logger:
+    level: DEBUG
+    handlers:
+      - slack
+    propagate: false
 
-  logger1: # Chỉ hiển thị lên console
+  logger1:
     level: DEBUG
     handlers:
       - console
     propagate: false
-
-  logger2: # Chỉ hiển thị lên console và file với những level > info
-    level: INFO
+  logger2:
+    level: WARNING
     handlers:
-      - console
       - file
     propagate: false
-
   logger3:
     level: DEBUG
     handlers:
       - queue_listener
     propagate: false
-
 root:
-  level: INFO
+  level: ERROR
   handlers:
     - console
-    - file
-  propogate: true

@@ -26,10 +26,13 @@ def set_max_width():
     )
 
 
-def run():
+def run(selected_page=None):
     import streamlit as st
     all_class = {x.name: x for x in get_subclasses(Page)}
     arr = sorted(list(all_class.keys()))
+
+    if selected_page and selected_page.lower() in [x.lower() for x in arr]:
+        arr = sorted(arr, key=lambda x: x.lower() == selected_page.lower(), reverse=True)
     task = st.sidebar.selectbox('Function', arr)
     t = all_class[task]
     e = t()
