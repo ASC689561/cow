@@ -3,45 +3,72 @@ objects:
   queue:
     class: queue.Queue
     maxsize: 1000
+
 formatters:
   simple:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-  simple_color:
+
+  color:
     class: colorlog.ColoredFormatter
-    format: '%(log_color)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format: '%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
 handlers:
+  elk:
+    class: cow.logging_.ELKHandler
+    level: INFO
+  #    url: http://logapi.misa.com.vn # default value
+  #    username: misa # default value
+  #    password: Misa@2019 # default value
+  #    app_id: test_log # default value
+  #    system_id: api # default value
+
   console:
     class: colorlog.StreamHandler
     level: DEBUG
-    formatter: simple_color
+    formatter: color
     stream: ext://sys.stdout
+
   file:
-    class: logging.FileHandler
-    filename: 'log.log'
+    class: logging.handlers.RotatingFileHandler
+    filename: '/tmp/log.log'
     formatter: simple
+    maxBytes: 10485760 # 10MB
+    backupCount: 20
+    encoding: utf8
+
   queue_listener:
     class: cow.logging_.QueueListenerHandler
+    respect_handler_level: true
     handlers:
       - cfg://handlers.console
       - cfg://handlers.file
+      - cfg://handlers.elk
     queue: cfg://objects.queue
+
 loggers:
-  logger1:
+
+  logger1: # Chỉ hiển thị lên console
     level: DEBUG
     handlers:
       - console
     propagate: false
-  logger2:
-    level: WARNING
+
+  logger2: # Chỉ hiển thị lên console và file với những level > info
+    level: INFO
     handlers:
+      - console
       - file
     propagate: false
+
   logger3:
     level: DEBUG
     handlers:
       - queue_listener
     propagate: false
+
 root:
-  level: ERROR
+  level: INFO
   handlers:
     - console
+    - file
+  propogate: true
