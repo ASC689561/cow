@@ -13,6 +13,10 @@ formatters:
     class: slack_logger.SlackFormatter
 
 handlers:
+  elk:
+    class: cow.logging_.ELKHandler
+    level: INFO
+
   slack:
     class: slack_logger.SlackHandler
     level: DEBUG
@@ -35,9 +39,11 @@ handlers:
 
   queue_listener:
     class: cow.logging_.QueueListenerHandler
+    respect_handler_level: true
     handlers:
       - cfg://handlers.console
       - cfg://handlers.file
+      - cfg://handlers.elk
     queue: cfg://objects.queue
 loggers:
   slack_logger:
@@ -62,6 +68,8 @@ loggers:
       - queue_listener
     propagate: false
 root:
-  level: ERROR
+  level: INFO
   handlers:
     - console
+    - file
+  propogate: true
