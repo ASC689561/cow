@@ -95,12 +95,11 @@ if __name__ == '__main__':
     other_logger.error("error")
     other_logger.fatal("error")
 
-
-    # import logging
-    # from slack_logger import SlackHandler, SlackFormatter
-    #
-    # sh = SlackHandler(
-    #     'https://hooks.slack.com/services/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9')  # url is like 'https://hooks.slack.com/...'
-    # sh.setFormatter(SlackFormatter())
-    # logging.basicConfig(handlers=[sh], level=logging.INFO)
-    # logging.info('warn message')
+    print('------root--------')
+    other_logger = logging.getLogger("slack")
+    other_logger.debug("debug")
+    other_logger.info("info")
+    other_logger.warning("warning")
+    other_logger.exception("exception", exc_info=False)
+    other_logger.error("error")
+    other_logger.fatal("error")

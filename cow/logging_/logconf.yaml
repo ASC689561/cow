@@ -16,8 +16,7 @@ handlers:
   slack:
     class: slack_logger.SlackHandler
     level: DEBUG
-    url: https://hooks.slack.com/services/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t
-    icon_emoji: ':robot_face:'
+    url: https://hooks.slack.com/services/T01C83395QT/B01C4Q256PP/xxx
     formatter: slack_formater
 
   console:
