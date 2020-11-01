@@ -19,7 +19,8 @@ class ColoredFormatter(colorlog.ColoredFormatter):
             for k, v in record.__dict__.items():
                 if k not in FORMATTER_RECORD_FIELD_SKIP_LIST:
                     extra_txt[k] = v
-            record.msg = m + " [" + str(extra_txt) + "]  "
+            if len(extra_txt) > 0:
+                record.msg = m + " [" + str(extra_txt) + "]  "
 
         formatted = super().format(record)
         record.msg = old_message
