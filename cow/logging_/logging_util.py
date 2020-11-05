@@ -55,7 +55,7 @@ class QueueListenerHandler(QueueHandler):
 
 
 if __name__ == '__main__':
-    logging_config = yaml.safe_load(open('./logconf.yaml'))
+    logging_config = yaml.safe_load(open('logconfig.yaml'))
 
     logging.config.dictConfig(logging_config)
 
