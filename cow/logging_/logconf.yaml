@@ -8,7 +8,7 @@ formatters:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
   simple_color:
     class: colorlog.ColoredFormatter
-    format: '%(log_color)s - %(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format: '%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s'
   slack_formater:
     class: slack_logger.SlackFormatter
 
@@ -16,6 +16,8 @@ handlers:
   elk:
     class: cow.logging_.ELKHandler
     level: INFO
+    app_id: test-log
+    system_id: test-app
 
   slack:
     class: slack_logger.SlackHandler
