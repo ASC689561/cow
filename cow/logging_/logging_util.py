@@ -55,7 +55,7 @@ class QueueListenerHandler(QueueHandler):
 
 
 if __name__ == '__main__':
-    logging_config = yaml.safe_load(open('./logconf.yaml'))
+    logging_config = yaml.safe_load(open('logconfig.yaml'))
 
     logging.config.dictConfig(logging_config)
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     other_logger.debug("debug")
     other_logger.info("info")
     other_logger.warning("warning")
-    other_logger.exception("exception",exc_info=False)
+    other_logger.exception("exception", exc_info=False)
     other_logger.error("error")
     other_logger.fatal("error")
 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     other_logger.debug("debug")
     other_logger.info("info")
     other_logger.warning("warning")
-    other_logger.exception("exception",exc_info=False)
+    other_logger.exception("exception", exc_info=False)
     other_logger.error("error")
     other_logger.fatal("error")
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     other_logger.debug("debug")
     other_logger.info("info")
     other_logger.warning("warning")
-    other_logger.exception("exception",exc_info=False)
+    other_logger.exception("exception", exc_info=False)
     other_logger.error("error")
     other_logger.fatal("error")
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     other_logger.debug("debug")
     other_logger.info("info")
     other_logger.warning("warning")
-    other_logger.exception("exception",exc_info=False)
+    other_logger.exception("exception", exc_info=False)
     other_logger.error("error")
     other_logger.fatal("error")
 

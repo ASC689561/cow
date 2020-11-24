@@ -1,15 +1,16 @@
 version: 1
 objects:
-  queue:
+  queue: # Create multiple queue if you need
     class: queue.Queue
     maxsize: 1000
+
 formatters:
-  simple:
+  simple: # formatter for log file
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-  simple_color:
+  simple_color: # formatter for console log
     class: colorlog.ColoredFormatter
     format: '%(log_color)s%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-  slack_formater:
+  slack: # formatter for slack
     class: slack_logger.SlackFormatter
 
 handlers:
@@ -22,8 +23,8 @@ handlers:
   slack:
     class: slack_logger.SlackHandler
     level: DEBUG
-    url: https://hooks.slack.com/services/T01C83395QT/B01C4Q256PP/xxx
-    formatter: slack_formater
+    url: https://hooks.slack.com/services/T01C83395QT/B01C4Q256PP/xxx # Replace with your webhook
+    formatter: slack
 
   console:
     class: colorlog.StreamHandler
@@ -36,7 +37,7 @@ handlers:
     filename: '/tmp/log.log'
     formatter: simple
     maxBytes: 10485760 # 10MB
-    backupCount: 20
+    backupCount: 20 # keep last 20 file
     encoding: utf8
 
   queue_listener:
@@ -59,16 +60,19 @@ loggers:
     handlers:
       - console
     propagate: false
+
   logger2:
     level: WARNING
     handlers:
       - file
     propagate: false
+
   logger3:
     level: DEBUG
     handlers:
       - queue_listener
     propagate: false
+
 root:
   level: INFO
   handlers:

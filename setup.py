@@ -8,5 +8,8 @@ setup(
               'cow.logging_'
               ],
     zip_safe=False,
-    install_requires=['PyYaml', 'requests', 'rsa', 'ntplib==0.3.4', 'pytz', "colorlog"]
+    install_requires=['PyYaml', 'requests', 'rsa', 'ntplib==0.3.4', 'pytz', "colorlog"],
+include_package_data=True,
+data_files=[('', ['cow/logging_/logconfig.yaml'])]
+
 )
