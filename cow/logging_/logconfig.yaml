@@ -17,6 +17,8 @@ handlers:
   elk:
     class: cow.logging_.ELKHandler
     level: INFO
+    app_id: test-log
+    system_id: test-app
 
   slack:
     class: slack_logger.SlackHandler
