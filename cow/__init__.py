@@ -17,3 +17,4 @@ from .utils import ignore_exception
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/streamlit_")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/logging_")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/redis_rpc_")
