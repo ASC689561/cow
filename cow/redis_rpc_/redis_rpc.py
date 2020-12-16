@@ -29,14 +29,14 @@ class TimeoutError(Error):
 class Server(object):
     '''redis rpc server'''
 
-    def __init__(self, queue, redis_url='redis://', prefix='pyredisrpc:', response_expire_time=60):
+    def __init__(self, queue, redis_client, prefix='pyredisrpc:', response_expire_time=60):
         '''
         redis_url: url to redis server
         queue: a name to generate server listening queue based on it
         prefix: use as a prefix to generate needed redis keys
         response_expire_time: response will expire if client doesn't fetch it in this time (seconds)
         '''
-        self.redis = redis.from_url(redis_url)
+        self.redis = redis_client
         self.prefix = prefix
         self.queue = prefix + queue
         self.response_expire_time = response_expire_time
@@ -137,14 +137,14 @@ class Server(object):
 class Client(object):
     '''redis rpc client'''
 
-    def __init__(self, queue, redis_url='redis://', prefix='pyredisrpc:', timeout=0):
+    def __init__(self, queue, redis_client, prefix='pyredisrpc:', timeout=0):
         '''
         redis_url: url to redis server
         queue: a name to generate server listening queue based on it
         prefix: use as a prefix to generate needed redis keys
         timeout: request timeout in seconds
         '''
-        self.redis = redis.from_url(redis_url)
+        self.redis = redis_client
         self.prefix = prefix
         self.queue = prefix + queue
         self.timeout = timeout
