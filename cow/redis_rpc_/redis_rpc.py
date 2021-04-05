@@ -47,7 +47,11 @@ class Server(object):
         run main loop of server: receive, parse, call
         '''
         while True:
-            _, req_data = self.redis.blpop(self.queue)
+            d = self.redis.blpop(self.queue,timeout=10)
+            if d is None:
+                logger.info("Timeout")
+                continue
+            _, req_data  = d
             req_data = req_data.decode()
             req_args = self.parse_request(req_data)
             if req_args is None:
@@ -64,7 +68,7 @@ class Server(object):
         req_data: a string contins json request
         '''
         try:
-            req = json.loads(req_data)  # TODO: check unicode data
+            req = json.loads(req_data)
         except json.JSONDecodeError:
             logger.error('request contains invalid json data: %s', req_data)
             return
