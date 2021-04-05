@@ -1,6 +1,7 @@
 import functools
 import logging
 import time
+import os
 
 
 def timing(func=None, name=None, log_level=logging.DEBUG):
@@ -49,3 +50,24 @@ def ignore_exception(times=1, reraise=True):
         return ignore
 
     return wrapped
+
+
+def execute_if_env(env):
+    def wrapped(func):
+        @functools.wraps(func)
+        def ignore(*args, **kw):
+            if os.environ.get(env, 'False').lower() == 'true':
+                result = func(*args, **kw)
+                return result
+            return None
+
+        return ignore
+
+    return wrapped
+
+if __name__ == '__main__':
+    @execute_if_env('TEST')
+    def xx():
+        print('xx')
+    os.environ['TEST']='true'
+    xx()
