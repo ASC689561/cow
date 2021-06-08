@@ -3,6 +3,10 @@ import logging
 import time
 import os
 
+from contextlib import contextmanager
+import threading
+import _thread
+
 
 def timing(func=None, name=None, log_level=logging.DEBUG):
     def timing(f):
@@ -65,9 +69,40 @@ def execute_if_env(env):
 
     return wrapped
 
+
+class TimeoutException(Exception):
+    def __init__(self, msg=''):
+        self.msg = msg
+
+
+@contextmanager
+def time_limit(seconds, msg=''):
+    timer = threading.Timer(seconds, lambda: _thread.interrupt_main())
+    timer.start()
+    try:
+        yield
+    except KeyboardInterrupt:
+        raise TimeoutException("Timed out for operation {}".format(msg))
+    finally: 
+        timer.cancel()
+
+
 if __name__ == '__main__':
     @execute_if_env('TEST')
     def xx():
         print('xx')
-    os.environ['TEST']='true'
+
+
+    os.environ['TEST'] = 'true'
     xx()
+
+    import time
+
+    # ends after 5 seconds
+    with time_limit(5, 'sleep'):
+        for i in range(10):
+            time.sleep(1)
+
+    # this will actually end after 10 seconds
+    with time_limit(5, 'sleep'):
+        time.sleep(10)
