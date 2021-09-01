@@ -14,6 +14,7 @@ from .time_utils import get_ntp_time
 from .timer import Timer
 from .webservice_util import *
 from .utils import ignore_exception
+from .batch_util import batch
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/streamlit_")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/logging_")
