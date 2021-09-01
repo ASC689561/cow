@@ -6,9 +6,6 @@ import random
 import string
 import sys
 
-import redis
-
-
 __all__ = [
     'Client',
     'Server',
@@ -16,8 +13,6 @@ __all__ = [
     'TimeoutException'
 ]
 
-if sys.version_info < (3,):
-    range = xrange
 
 def random_string(size=8, chars=string.ascii_uppercase + string.digits):
     """Ref: http://stackoverflow.com/questions/2257441"""
@@ -54,13 +49,16 @@ def decode_message(message):
 class JSONTransport(object):
     """Cross platform transport."""
     _singleton = None
+
     @classmethod
     def create(cls):
         if cls._singleton is None:
             cls._singleton = JSONTransport()
         return cls._singleton
+
     def dumps(self, obj):
         return json.dumps(obj)
+
     def loads(self, obj):
         return json.loads(obj.decode())
 
@@ -68,17 +66,20 @@ class JSONTransport(object):
 class PickleTransport(object):
     """Only works with Python clients and servers."""
     _singleton = None
+
     @classmethod
     def create(cls):
         if cls._singleton is None:
             cls._singleton = PickleTransport()
         return cls._singleton
+
     def dumps(self, obj):
-        # Version 2 works for Python 2.3 and later
-        return pickle.dumps(obj, protocol=2)
+        return pickle.dumps(obj, protocol=4)
+
     def loads(self, obj):
         return pickle.loads(obj)
- 
+
+
 class Client(object):
     """Calls remote functions using Redis as a message queue."""
 
@@ -96,7 +97,8 @@ class Client(object):
     def call(self, method_name, *args, **kwargs):
         function_call = {'name': method_name, 'args': args, 'kwargs': kwargs}
         response_queue = self.message_queue + ':rpc:' + random_string()
-        rpc_request = dict(function_call=function_call, response_queue=response_queue)
+        rpc_request = dict(function_call=function_call,
+                           response_queue=response_queue)
         message = self.transport.dumps(rpc_request)
         logging.debug('RPC Request: %s' % message)
         self.redis_server.rpush(self.message_queue, message)
@@ -112,7 +114,8 @@ class Client(object):
         if exception is not None:
             raise RemoteException(exception)
         if 'return_value' not in rpc_response:
-            raise RemoteException('Malformed RPC Response message: %s' % rpc_response)
+            raise RemoteException(
+                'Malformed RPC Response message: %s' % rpc_response)
         return rpc_response['return_value']
 
     def __getattr__(self, name):
@@ -127,12 +130,13 @@ class Server(object):
         self.redis_server = redis_server
         self.message_queue = message_queue
         self.local_object = local_object
- 
+
     def run(self):
         # Flush the message queue.
         self.redis_server.delete(self.message_queue)
         while True:
-            message_queue, message = self.redis_server.blpop(self.message_queue)
+            message_queue, message = self.redis_server.blpop(
+                self.message_queue)
             message_queue = message_queue.decode()
             assert message_queue == self.message_queue
             logging.debug('RPC Request: %s' % message)
