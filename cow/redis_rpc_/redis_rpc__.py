@@ -93,6 +93,7 @@ class Client(object):
             self.transport = PickleTransport()
         else:
             raise Exception('invalid transport {0}'.format(transport))
+        self.logger = logging.getLogger(__name__)
 
     def call(self, method_name, *args, **kwargs):
         function_call = {'name': method_name, 'args': args, 'kwargs': kwargs}
@@ -100,7 +101,7 @@ class Client(object):
         rpc_request = dict(function_call=function_call,
                            response_queue=response_queue)
         message = self.transport.dumps(rpc_request)
-        logging.debug('RPC Request: %s' % message)
+        self.logger.debug('RPC Request: %s' % message)
         self.redis_server.rpush(self.message_queue, message)
         result = self.redis_server.blpop(response_queue, self.timeout)
         if result is None:
@@ -108,7 +109,7 @@ class Client(object):
         message_queue, message = result
         message_queue = message_queue.decode()
         assert message_queue == response_queue
-        logging.debug('RPC Response: %s' % message)
+        self.logger.debug('RPC Response: %s' % message)
         rpc_response = self.transport.loads(message)
         exception = rpc_response.get('exception')
         if exception is not None:
@@ -139,7 +140,7 @@ class Server(object):
                 self.message_queue)
             message_queue = message_queue.decode()
             assert message_queue == self.message_queue
-            logging.debug('RPC Request: %s' % message)
+            self.logger.debug('RPC Request: %s' % message)
             transport, rpc_request = decode_message(message)
             response_queue = rpc_request['response_queue']
             function_call = rpc_request['function_call']
@@ -154,7 +155,7 @@ class Server(object):
                 (type, value, traceback) = sys.exc_info()
                 rpc_response = dict(exception=repr(value))
             message = transport.dumps(rpc_response)
-            logging.debug('RPC Response: %s' % message)
+            self.logger.debug('RPC Response: %s' % message)
             self.redis_server.rpush(response_queue, message)
 
 
