@@ -21,7 +21,7 @@ class Timer(object):
     """
 
     def __init__(self, timer=default_timer, factor=1,
-                 output=None, fmt="took {:.3f} seconds", prefix=""):
+                 output=print, fmt="took {:.3f} seconds", prefix=""):
         self.timer = timer
         self.factor = factor
         self.output = output
@@ -36,6 +36,11 @@ class Timer(object):
     def __enter__(self):
         """ Set the start time """
         self.start = self()
+        if callable(self.output):
+            self.output(f"Start: {self.prefix}")
+        else:
+            print(f"Start: {self.prefix}")
+
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -113,10 +118,8 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.DEBUG)
 
-
     @timer(logger=logging.getLogger())
     def blah():
         time.sleep(2)
-
 
     blah()
