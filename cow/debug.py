@@ -3,7 +3,7 @@ import os
 
 
 def is_debug() -> bool:
-    if 'pydevd' in sys.modules or os.environ.get('DEBUG', 'False'):
+    if 'pydevd' in sys.modules or os.environ.get('DEBUG', False):
         return True
     else:
         return False
