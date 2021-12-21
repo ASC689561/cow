@@ -12,5 +12,4 @@ setup(
     install_requires=['PyYaml', 'requests', 'rsa', 'ntplib==0.3.4', 'pytz', "colorlog", 'redis'],
     include_package_data=True,
     data_files=[('', ['cow/logging_/logconfig.yaml'])]
-
 )
