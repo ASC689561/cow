@@ -13,8 +13,8 @@ from .text_generate import generate_permutation
 from .time_utils import get_ntp_time
 from .timer import Timer
 from .webservice_util import *
-from .utils import ignore_exception
 from .batch_util import batch
+from .dsn_util import dns_query
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/streamlit_")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/logging_")
