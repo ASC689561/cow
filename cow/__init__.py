@@ -14,7 +14,6 @@ from .time_utils import get_ntp_time
 from .timer import Timer
 from .webservice_util import *
 from .batch_util import batch
-from .dns_util import dns_query
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/streamlit_")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/logging_")
