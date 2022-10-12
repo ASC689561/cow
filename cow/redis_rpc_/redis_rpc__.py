@@ -131,6 +131,7 @@ class Server(object):
         self.redis_server = redis_server
         self.message_queue = message_queue
         self.local_object = local_object
+        self.logger = logging.getLogger('redis_rpc')
 
     def process_single_message(self):
         message_queue = self.redis_server.lpop(
