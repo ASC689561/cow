@@ -132,6 +132,29 @@ class Server(object):
         self.message_queue = message_queue
         self.local_object = local_object
 
+    def process_single_message(self):
+        message_queue = self.redis_server.lpop(
+            self.message_queue)
+        if message_queue is None:
+            return
+
+        transport, rpc_request = decode_message(message_queue)
+        response_queue = rpc_request['response_queue']
+        function_call = rpc_request['function_call']
+        try:
+            f_name = function_call['name']
+            f_args = function_call.get('args', ())
+            f_kw = function_call.get('kwargs', {})
+            func = getattr(self.local_object, f_name)
+            return_value = func(*f_args, **f_kw)
+            rpc_response = dict(return_value=return_value)
+        except:
+            (type, value, traceback) = sys.exc_info()
+            rpc_response = dict(exception=repr(value))
+        message = transport.dumps(rpc_response)
+        self.logger.debug('RPC Response: %s' % message)
+        self.redis_server.rpush(response_queue, message)
+
     def run(self):
         # Flush the message queue.
         self.redis_server.delete(self.message_queue)
