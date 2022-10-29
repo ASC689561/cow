@@ -93,7 +93,7 @@ class Client(object):
             self.transport = PickleTransport()
         else:
             raise Exception('invalid transport {0}'.format(transport))
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("cow.redis_rpc_")
 
     def call(self, method_name, *args, **kwargs):
         function_call = {'name': method_name, 'args': args, 'kwargs': kwargs}
@@ -131,7 +131,7 @@ class Server(object):
         self.redis_server = redis_server
         self.message_queue = message_queue
         self.local_object = local_object
-        self.logger = logging.getLogger('redis_rpc')
+        self.logger = logging.getLogger('cow.redis_rpc_')
 
     def process_single_message(self):
         message_queue = self.redis_server.lpop(
@@ -153,7 +153,7 @@ class Server(object):
             (type, value, traceback) = sys.exc_info()
             rpc_response = dict(exception=repr(value))
         message = transport.dumps(rpc_response)
-        self.logger.debug('RPC Response: %s' % message)
+        self.logger.debug('RPC Response: %s' % rpc_response)
         self.redis_server.rpush(response_queue, message)
 
     def run(self):
@@ -179,7 +179,7 @@ class Server(object):
                 (type, value, traceback) = sys.exc_info()
                 rpc_response = dict(exception=repr(value))
             message = transport.dumps(rpc_response)
-            self.logger.debug('RPC Response: %s' % message)
+            self.logger.debug('RPC Response: %s' % rpc_response)
             self.redis_server.rpush(response_queue, message)
 
 
